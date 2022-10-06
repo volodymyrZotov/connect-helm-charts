@@ -8,7 +8,7 @@ __Note__: As you can use Kubernetes Secrets Injector either with Connect or Serv
 
 ## Installation
 ```
-helm install --generate-name kubernetes-Secrets-injector
+helm install --generate-name kubernetes-secrets-injector
 ```
 
 ## Usage
