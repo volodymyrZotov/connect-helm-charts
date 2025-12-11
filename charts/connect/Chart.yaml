@@ -12,3 +12,4 @@ maintainers:
     email: support+business@1password.com
 icon: https://avatars.githubusercontent.com/u/38230737
 appVersion: "1.8.1"
+# dumb change should not trigger a release
