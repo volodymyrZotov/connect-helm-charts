@@ -39,24 +39,30 @@ jobs:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           CR_SKIP_EXISTING: true
 
-      - name: Debug chart-releaser outputs
+      - name: Check for released packages
+        id: check_packages
         run: |
           echo "=== Debug: chart-releaser outputs ==="
           echo "changed_charts: '${{ steps.cr.outputs.changed_charts }}'"
           echo "chart_version: '${{ steps.cr.outputs.chart_version }}'"
-          echo "=== Listing .cr-release-packages directory ==="
-          ls -la .cr-release-packages/ || echo "Directory .cr-release-packages does not exist"
-          echo "=== Listing .cr-index directory ==="
-          ls -la .cr-index/ || echo "Directory .cr-index does not exist"
+          echo "=== Checking .cr-release-packages directory ==="
+          if [ -d ".cr-release-packages" ] && [ -n "$(ls -A .cr-release-packages/ 2>/dev/null)" ]; then
+            echo "has_packages=true" >> $GITHUB_OUTPUT
+            echo "Found packages:"
+            ls -la .cr-release-packages/
+          else
+            echo "has_packages=false" >> $GITHUB_OUTPUT
+            echo "No packages found"
+          fi
 
-      - if: ${{ steps.cr.outputs.changed_charts }}
+      - if: ${{ steps.check_packages.outputs.has_packages == 'true' }}
         name: (DEBUG) Would Login to GitHub Container Registry
         run: |
           echo "=== Would login to GHCR ==="
           echo "Registry: ghcr.io"
           echo "Username: ${{ github.repository_owner }}"
 
-      - if: ${{ steps.cr.outputs.changed_charts }}
+      - if: ${{ steps.check_packages.outputs.has_packages == 'true' }}
         name: (DEBUG) Would Push Charts to GHCR
         run: |
           echo "=== Would push charts to GHCR ==="
