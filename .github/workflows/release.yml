@@ -34,7 +34,6 @@ jobs:
         uses: florisvdg/chart-releaser-action@v1.3.0
         with:
           charts_dir: charts
-          skip_upload: true # Skip updating gh-pages index (branch doesn't exist in fork)
         id: cr
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
